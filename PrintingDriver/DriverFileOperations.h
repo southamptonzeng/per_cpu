@@ -13,6 +13,4 @@ long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned lo
 
 int DriverMMap(struct file *pslFileStruct, struct vm_area_struct *pslVirtualMemoryArea);
 
-DEFINE_PER_CPU(long, gUsage) = 0;
-
 #endif

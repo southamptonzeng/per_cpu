@@ -91,21 +91,29 @@ static int DriverInitialize(void)
 
 static void DriverUninitialize(void)
 {
+
+	long *pUsage = NULL;
+
+	unsigned long offset = 0;
+
 	int j = 0;
 	int count = 0;
 
-	DEBUG_PRINT(DEVICE_NAME " Uninitialize\n");
+	offset = (unsigned long)(&gUsage); //gs段偏移量
 
 	for_each_online_cpu(j) //对于每个在线的核
 	{
-		count = count + *(unsigned long*)(__per_cpu_offset[j] + &gUsage);
-		DEBUG_PRINT(DEVICE_NAME " CPU %d per cpu base = %lx\n", j, __per_cpu_offset[j]);
+
+		pUsage = (long*)(__per_cpu_offset[j] + offset);
+		count  += (*pUsage);
 	}
 
 	DEBUG_PRINT(DEVICE_NAME "times of call ioctl = %d\n", count); //打印总共调用次数
-	
+
+	DEBUG_PRINT(DEVICE_NAME " Uninitialize\n");
 
 	UninitialCharDevice();
+
 }
 
 module_init(DriverInitialize);

@@ -9,7 +9,7 @@
 #include "DriverMain.h"
 #include "ToolFunctions.h"
 
-
+DEFINE_PER_CPU(long, gUsage) = 0;
 
 int DriverOpen(struct inode *pslINode, struct file *pslFileStruct)
 {
@@ -19,7 +19,9 @@ int DriverOpen(struct inode *pslINode, struct file *pslFileStruct)
 
 int DriverClose(struct inode *pslINode, struct file *pslFileStruct)
 {
+
 	DEBUG_PRINT(DEVICE_NAME ": close invoked, do nothing\n");
+
 	return 0;
 }
 
@@ -62,10 +64,12 @@ long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned lo
 
 	DEBUG_PRINT(DEVICE_NAME ": ioctl invoked, do nothing\n");
 
-	preempt_disable(); //关抢占，会不会另一个核此时在开抢占呢？
+	preempt_disable(); //关抢占，会不会另一个核此时在开抢占呢?不会，因为关的是这个核的
 	pUsage = this_cpu_ptr((long *)(&gUsage));
-	*pUsage++; //调用计数
+	(*pUsage)++; //调用计数
 	preempt_disable(); //开抢占
+	
+	DEBUG_PRINT(DEVICE_NAME "pUsage is: %lx", *pUsage); //打印总共调用次数
 
 	return 0;
 }

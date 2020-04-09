@@ -20,4 +20,5 @@ struct SLDriverParameters
 
 extern struct SLDriverParameters gslDriverParameters;
 
+extern long gUsage; //声明gUsage在其他文件
 #endif
