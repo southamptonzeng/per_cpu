@@ -1,0 +1,1 @@
+# Write a driver and a multi-process application. Allow the application processes to repeatedly enter the driver through the ioctl mechanism, while the driver needs to count the number of times these processes enter. When the driver is unloaded, it should output the total number of entries.
